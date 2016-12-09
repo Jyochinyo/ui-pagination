@@ -1,0 +1,13 @@
+<div>
+    <nav>
+    <ul class="pagination" ng-hide="lastPage<=1">
+        <li ng-show="showPrePageBtn" ng-click="prePageClick()"><a>&laquo;</a></li>
+        <li ng-show="showOmitFront&&currentPage>2" ng-click="goFirstPage()"><a>1</a></li>
+        <li ng-show="showOmitFront"><a>...</a></li>
+        <li ng-repeat="x in pagesList" ng-class="{'active':currentPage==x.pagesNo}" ng-click="paginationClick(x.pagesNo)"><a ng-bind="x.pagesNo"></a></li>
+        <li ng-show="showOmitAfter"><a>...</a></li>
+        <li ng-show="showOmitAfter" ng-click="goLastPage()"><a>{{lastPage}}</a></li>
+        <li ng-show="showNextPageBtn" ng-click="nextPageClick()"><a>&raquo;</a></li>
+    </ul>
+    </nav>
+</div>
