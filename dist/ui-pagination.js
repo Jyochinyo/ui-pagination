@@ -8,8 +8,8 @@ app.directive('pageControl', function () {
             /* 
             分页器说明:
             pagesCount              是在请求数据中返回的页面总数量
-            $scope.omitPages        修改这个数值可以控制页面数量达到多少之后会出现省略号,在这之前会全部显示,建议奇数
-            $scope.tagsInPagination 修改这个数值可以控制省略一些页面后剩余的显示标签数量,建议奇数
+            $scope.omitPages        修改这个数值可以控制页面数量达到多少之后会出现省略号,在这之前会全部显示,建议单数
+            $scope.tagsInPagination 修改这个数值可以控制省略一些页面后剩余的显示标签数量,建议单数
 
             *** JS里获取到页面数量之后通过这个方法将pagesCount传来
                 $scope.whenYouGetPageCount(pagesCount);
@@ -109,17 +109,26 @@ app.directive('pageControl', function () {
             $scope.paginationClick = function (index) {
 
                 // $scope.tagsMid == 2
-                if (index <= $scope.tagsMid+1) {
+                if ($scope.lastPage < $scope.omitPages) {
                     $scope.setPagination();
-                } else if (index > $scope.tagsMid+1 && index < $scope.lastPage-$scope.tagsMid) {
-                    $scope.pagesList = [];
-                    for (var i = 0; i < $scope.tagsInPagination; i++) {
-                        $scope.pagesList.push({pagesNo:index+i-$scope.tagsMid});
-                    }
                 } else {
-                    $scope.pagesList = [];
-                    for (var i = $scope.tagsInPagination; i > 0 ; i--) {
-                        $scope.pagesList.push({pagesNo:$scope.lastPage-i+1});
+                    if (index <= $scope.tagsMid+1) {
+                        $scope.setPagination();
+                    } else if (index > $scope.tagsMid+1 && index < $scope.lastPage-$scope.tagsMid) {
+                        $scope.pagesList = [];
+                        for (var i = 0; i < $scope.tagsInPagination; i++) {
+                            $scope.pagesList.push({pagesNo:index+i-$scope.tagsMid});
+                        }
+                    } else {
+                        $scope.pagesList = [];
+                        if ($scope.tagsInPagination > $scope.lastPage) {
+                            var count = $scope.lastPage;
+                        } else {
+                            var count = $scope.tagsInPagination;
+                        }
+                        for (var i = count; i > 0 ; i--) {
+                            $scope.pagesList.push({pagesNo:$scope.lastPage-i+1});
+                        }
                     }
                 }
                 
@@ -192,10 +201,9 @@ app.directive('pageControl', function () {
                     } else {
                         $scope.showNextPageBtn = false;
                     }
-                }    
+                }
+                
             };
-
-            // end
 
         }}
 });
